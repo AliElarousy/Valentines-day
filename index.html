@@ -6,141 +6,157 @@
 <title>Be My Valentine?</title>
 
 <style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  overflow: hidden;
-  background: linear-gradient(135deg, #ffe6f0, #fff, #e6f2ff);
-  min-height: 100vh;
-}
+  :root { --shadow: 0 25px 60px rgba(0,0,0,.2); }
 
-/* Floating Photos */
-.float-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
+  * { box-sizing: border-box; }
 
-.float-photo {
-  position: absolute;
-  width: 110px;
-  height: 110px;
-  border-radius: 20px;
-  background-size: cover;
-  background-position: center;
-  box-shadow: 0 15px 40px rgba(0,0,0,.2);
-  animation: float linear infinite;
-}
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    overflow: hidden;
+    min-height: 100vh;
+    background: radial-gradient(circle at 20% 10%, #ffe3ef, transparent 40%),
+                radial-gradient(circle at 80% 20%, #e3f1ff, transparent 40%),
+                radial-gradient(circle at 60% 90%, #fff3d6, transparent 45%),
+                linear-gradient(135deg, #fff, #ffeaf3);
+  }
 
-@keyframes float {
-  0%   { transform: translateY(110vh) rotate(0deg); }
-  100% { transform: translateY(-120vh) rotate(360deg); }
-}
+  /* Floating photos layer */
+  .float-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .float-photo {
+    position: absolute;
+    width: clamp(70px, 10vw, 120px);
+    aspect-ratio: 1/1;
+    border-radius: 18px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,.2);
+    opacity: .9;
+    animation: drift linear infinite;
+    transform: translate3d(0,0,0);
+  }
+  @keyframes drift {
+    0%   { transform: translate3d(var(--x0), var(--y0), 0) rotate(var(--r0)); }
+    100% { transform: translate3d(var(--x1), var(--y1), 0) rotate(var(--r1)); }
+  }
 
-/* Card */
-.container {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding: 20px;
-}
+  /* Confetti canvas */
+  canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
 
-.card {
-  background: rgba(255,255,255,.85);
-  backdrop-filter: blur(10px);
-  border-radius: 30px;
-  padding: 30px;
-  text-align: center;
-  width: min(480px, 95%);
-  box-shadow: 0 25px 60px rgba(0,0,0,.2);
-}
+  /* Center card container */
+  .container {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+  }
 
-h1 {
-  margin: 0 0 10px;
-  font-size: 34px;
-}
+  .card {
+    width: min(520px, 92vw);
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.55);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    padding: 26px 22px 20px;
+    text-align: center;
+  }
 
-p {
-  margin: 0 0 20px;
-  opacity: .85;
-}
+  h1 {
+    margin: 6px 0 10px;
+    font-size: clamp(26px, 4vw, 38px);
+    letter-spacing: -0.02em;
+  }
 
-/* Buttons */
-.button-area {
-  position: relative;
-  height: 140px;
-}
+  p {
+    margin: 0 0 16px;
+    font-size: 16px;
+    opacity: .88;
+    line-height: 1.45;
+  }
 
-button {
-  border: none;
-  padding: 12px 22px;
-  font-size: 18px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
+  .tiny {
+    font-size: 12px;
+    opacity: .7;
+    margin-top: 10px;
+  }
 
-#yesBtn {
-  background: #ff2e72;
-  color: white;
-}
+  /* Buttons area */
+  .button-area {
+    position: relative;
+    height: 140px;
+    display: grid;
+    place-items: center;
+    margin-top: 6px;
+  }
 
-#yesBtn:hover {
-  transform: scale(1.05);
-}
+  button {
+    border: none;
+    padding: 12px 22px;
+    font-size: 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: 0.18s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,.12);
+    user-select: none;
+  }
+  button:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0,0,0,.14); }
 
-#noBtn {
-  background: white;
-  position: absolute;
-}
+  #yesBtn { background: #ff2e72; color: white; }
+  #noBtn  { background: rgba(255,255,255,.92); color: #333; position: absolute; }
 
-#noBtn:hover {
-  background: #eee;
-}
+  /* Gift box */
+  .gift-box {
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.9);
+    border: 1px solid rgba(255,255,255,.7);
+    text-align: left;
+  }
+  .gift-box h2 { margin: 0 0 6px; font-size: 18px; }
+  .gift-box p  { margin: 0 0 10px; font-size: 14px; opacity: .9; }
+  .gift-media {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,.06);
+    background: #fff;
+  }
+  .gift-media img { width: 100%; display: block; }
 
-/* YES Screen */
-#yesScreen {
-  display: none;
-  animation: fadeIn .4s ease;
-}
+  /* Love screen polish */
+  #loveScreen { animation: fadeInLove 0.6s ease; overflow: hidden; position: relative; }
+  @keyframes fadeInLove {
+    from { opacity:0; transform: translateY(10px) scale(.98); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.gift-box {
-  margin-top: 15px;
-  padding: 15px;
-  border-radius: 20px;
-  background: rgba(255,255,255,.9);
-}
-
-.gift-box img {
-  width: 100%;
-  border-radius: 15px;
-  margin-top: 10px;
-}
-
-#emailBtn {
-  margin-top: 15px;
-  width: 100%;
-  background: #111;
-  color: white;
-}
-
-/* Confetti */
-canvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-}
+  /* Hearts */
+  .heart {
+    position: fixed;
+    bottom: -20px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: .85;
+    animation: heartUp linear forwards;
+  }
+  @keyframes heartUp {
+    0%   { transform: translateY(0) scale(1); opacity: .9; }
+    100% { transform: translateY(-120vh) scale(1.6); opacity: 0; }
+  }
 </style>
 </head>
 
@@ -150,6 +166,8 @@ canvas {
 <canvas id="confetti"></canvas>
 
 <div class="container">
+
+  <!-- ASK SCREEN -->
   <div class="card" id="mainCard">
     <h1>Will you be my Valentine? 💌</h1>
     <p>One date. Your favorite vibe. I handle everything.</p>
@@ -158,102 +176,241 @@ canvas {
       <button id="yesBtn">Yes 💖</button>
       <button id="noBtn">No</button>
     </div>
+
+    <div class="tiny">P.S. the “No” button is kinda shy.</div>
   </div>
 
-  <div class="card" id="yesScreen">
+  <!-- GIFT SCREEN -->
+  <div class="card" id="giftScreen" style="display:none;">
     <h1>You said YES 😭💖</h1>
     <p>Okay good. Because I already planned this.</p>
 
     <div class="gift-box">
-      <h3>I got you something… 🎁</h3>
-      <p>Open this and then check your email 💌</p>
+      <h2>Before anything…</h2>
+      <p>Click this 😌</p>
 
-      <img src="gift.jpg" alt="Gift Screenshot">
+      <button id="revealGiftBtn" style="width:100%; background:#ff2e72; color:white;">
+        I got you something 🎁
+      </button>
 
-      <button id="emailBtn">Check your email 💌</button>
+      <div id="giftReveal" style="display:none; margin-top:14px;">
+        <p style="margin:0 0 10px; opacity:.9;">Now check your email 💌</p>
+
+        <div class="gift-media">
+          <img src="gifts/13.jpg" alt="Gift Screenshot">
+        </div>
+
+        <button id="nextBtn" style="margin-top:12px; width:100%; background:#111; color:#fff;">
+          Next 💗
+        </button>
+      </div>
     </div>
 
-    <p style="margin-top:15px;">Text me “YES 💖” right now.</p>
+    <button id="emailBtn" style="margin-top:14px; width:100%; background:#111; color:#fff;">
+      Check your email 💌
+    </button>
+
+    <div class="tiny">If you didn’t get it yet, refresh your inbox 😌</div>
   </div>
+
+  <!-- LOVE SCREEN -->
+  <div class="card" id="loveScreen" style="display:none;">
+    <h1 style="
+      font-size:28px;
+      margin-bottom:18px;
+      background: linear-gradient(90deg,#ff2e72,#ff6aa5,#ff2e72);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    ">
+      HAPPY VALENTINES DAY JUJU 💗
+    </h1>
+
+    <p style="
+      font-size:16px;
+      line-height:1.7;
+      text-align:left;
+      white-space:pre-line;
+      margin-bottom: 18px;
+    ">
+I love you so much baby you're the cutest, hottest, smartest, funniest, most gorgeous girl in the world.  Nothing makes me happier than knowing you're with me ya juju you're my soulmate, my bestfriend, my girlfriend, my wife, my baby, my love, my entire world.  I hope I can give you everything you ever dream of and I promise to do anything I can to make you happy.  You have no idea how much you mean to me and how much of a better man you make me.  I miss you so much love and I can't wait to see you.  Rbna ykhleki leya. ana bahebk ya juju w walahi ma fe had fel donya momkn yhbk ady enty hayati kolaha.  To many more valentines days to come ya rohi.
+    </p>
+
+    <div style="display:flex; gap:10px;">
+      <button id="restartBtn" style="flex:1; background:white;">
+        Read Again 🔁
+      </button>
+      <button id="closeBtn" style="flex:1; background:#ff2e72; color:white;">
+        Forever 💖
+      </button>
+    </div>
+
+    <div class="tiny" style="margin-top:10px;">(You can screenshot this page 😌)</div>
+  </div>
+
 </div>
 
 <script>
-/* CONFIG */
-const PHOTO_COUNT = 18; // Change to number of photos you add
-const floatLayer = document.getElementById("floatLayer");
+  /* =========================
+     CONFIG
+     ========================= */
+  // Rename your photos to: photos/1.jpg, photos/2.jpg, ... photos/N.jpg
+  // Set PHOTO_COUNT to N
+  const PHOTO_COUNT = 12; // <-- change to how many you have
 
-/* Floating Photos */
-for (let i = 1; i <= PHOTO_COUNT; i++) {
-  const photo = document.createElement("div");
-  photo.className = "float-photo";
-  photo.style.backgroundImage = `url('photos/${i}.jpg')`;
-  photo.style.left = Math.random() * 100 + "vw";
-  photo.style.animationDuration = (15 + Math.random() * 10) + "s";
-  photo.style.animationDelay = Math.random() * 5 + "s";
-  floatLayer.appendChild(photo);
-}
+  const floatLayer = document.getElementById("floatLayer");
 
-/* Moving No Button */
-const noBtn = document.getElementById("noBtn");
-const area = document.getElementById("buttonArea");
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+  const photoPath = (i) => `photos/${i}.jpg`;
 
-function moveButton() {
-  const maxX = area.clientWidth - noBtn.offsetWidth;
-  const maxY = area.clientHeight - noBtn.offsetHeight;
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top = Math.random() * maxY + "px";
-}
+  /* =========================
+     FLOATING PHOTOS
+     ========================= */
+  const floatCount = Math.min(30, Math.max(14, PHOTO_COUNT * 2));
+  for (let k = 0; k < floatCount; k++) {
+    const i = (k % PHOTO_COUNT) + 1;
+    const el = document.createElement("div");
+    el.className = "float-photo";
+    el.style.backgroundImage = `url('${photoPath(i)}')`;
 
-noBtn.addEventListener("mouseenter", moveButton);
-noBtn.addEventListener("click", moveButton);
+    const x0 = rand(-10, 110), y0 = rand(-10, 110);
+    const x1 = x0 + rand(-35, 35), y1 = y0 + rand(-35, 35);
+    el.style.setProperty('--x0', `${x0}vw`);
+    el.style.setProperty('--y0', `${y0}vh`);
+    el.style.setProperty('--x1', `${x1}vw`);
+    el.style.setProperty('--y1', `${y1}vh`);
+    el.style.setProperty('--r0', `${rand(-12, 12)}deg`);
+    el.style.setProperty('--r1', `${rand(-25, 25)}deg`);
+    el.style.animationDuration = `${rand(10, 22)}s`;
+    el.style.animationDelay = `${rand(-12, 0)}s`;
+    el.style.opacity = rand(0.65, 0.95);
 
-/* YES Click */
-const yesBtn = document.getElementById("yesBtn");
-const mainCard = document.getElementById("mainCard");
-const yesScreen = document.getElementById("yesScreen");
-
-yesBtn.addEventListener("click", () => {
-  mainCard.style.display = "none";
-  yesScreen.style.display = "block";
-  startConfetti();
-});
-
-/* Email Button */
-document.getElementById("emailBtn").addEventListener("click", () => {
-  window.open("https://mail.google.com/mail/u/0/#inbox", "_blank");
-});
-
-/* Simple Confetti */
-const canvas = document.getElementById("confetti");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-function startConfetti() {
-  const pieces = [];
-  for (let i = 0; i < 200; i++) {
-    pieces.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      size: 6 + Math.random() * 8,
-      speed: 2 + Math.random() * 4,
-      color: `hsl(${Math.random()*360}, 80%, 60%)`
-    });
+    floatLayer.appendChild(el);
   }
 
-  function update() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    pieces.forEach(p => {
-      p.y += p.speed;
-      if (p.y > canvas.height) p.y = -10;
-      ctx.fillStyle = p.color;
-      ctx.fillRect(p.x, p.y, p.size, p.size);
-    });
-    requestAnimationFrame(update);
+  /* =========================
+     MOVING "NO" BUTTON
+     ========================= */
+  const noBtn = document.getElementById("noBtn");
+  const area = document.getElementById("buttonArea");
+
+  const noPhrases = ["No", "You sure?", "Try again", "Be serious", "Stop 😭", "Come on", "Please?", "Wrong button"];
+  let noIndex = 0;
+
+  function moveNoButton() {
+    const maxX = area.clientWidth - noBtn.offsetWidth;
+    const maxY = area.clientHeight - noBtn.offsetHeight;
+    noBtn.style.left = Math.max(0, Math.random() * maxX) + "px";
+    noBtn.style.top  = Math.max(0, Math.random() * maxY) + "px";
+    noIndex = (noIndex + 1) % noPhrases.length;
+    noBtn.textContent = noPhrases[noIndex];
   }
 
-  update();
-}
+  // initial position
+  noBtn.style.left = "62%";
+  noBtn.style.top  = "55%";
+
+  noBtn.addEventListener("mouseenter", moveNoButton);
+  noBtn.addEventListener("click", (e) => { e.preventDefault(); moveNoButton(); });
+
+  /* =========================
+     SCREEN TRANSITIONS
+     ========================= */
+  const yesBtn = document.getElementById("yesBtn");
+  const mainCard = document.getElementById("mainCard");
+  const giftScreen = document.getElementById("giftScreen");
+  const loveScreen = document.getElementById("loveScreen");
+
+  yesBtn.addEventListener("click", () => {
+    mainCard.style.display = "none";
+    giftScreen.style.display = "block";
+    startConfetti(2200);
+  });
+
+  const revealGiftBtn = document.getElementById("revealGiftBtn");
+  const giftReveal = document.getElementById("giftReveal");
+  const nextBtn = document.getElementById("nextBtn");
+
+  revealGiftBtn.addEventListener("click", () => {
+    giftReveal.style.display = "block";
+    revealGiftBtn.style.display = "none";
+  });
+
+  nextBtn.addEventListener("click", () => {
+    giftScreen.style.display = "none";
+    loveScreen.style.display = "block";
+    startHearts();
+  });
+
+  document.getElementById("emailBtn").addEventListener("click", () => {
+    window.open("https://mail.google.com/mail/u/0/#inbox", "_blank");
+  });
+
+  document.getElementById("restartBtn").addEventListener("click", () => location.reload());
+  document.getElementById("closeBtn").addEventListener("click", () => alert("Okay 😌💖"));
+
+  /* =========================
+     CONFETTI
+     ========================= */
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+
+  function startConfetti(durationMs = 2000) {
+    const W = window.innerWidth, H = window.innerHeight;
+    canvas.width = W; canvas.height = H;
+
+    const pieces = Array.from({ length: 190 }, () => ({
+      x: rand(0, W),
+      y: rand(-H, 0),
+      w: rand(6, 10),
+      h: rand(8, 14),
+      vx: rand(-1.2, 1.2),
+      vy: rand(2.2, 4.8),
+      rot: rand(0, Math.PI),
+      vr: rand(-0.12, 0.12),
+      hue: rand(0, 360),
+      alpha: rand(0.75, 1),
+    }));
+
+    const start = performance.now();
+
+    function frame(t) {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of pieces) {
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        if (p.y > H + 30) p.y = rand(-80, -10);
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = `hsla(${p.hue}, 85%, 62%, ${p.alpha})`;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      }
+
+      if (t - start < durationMs) requestAnimationFrame(frame);
+      else ctx.clearRect(0, 0, W, H);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* =========================
+     HEARTS
+     ========================= */
+  function startHearts() {
+    const hearts = ["💗","💖","💘","💕","💞","❤️"];
+    const interval = setInterval(() => {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.animationDuration = (4 + Math.random()*3) + "s";
+      h.style.fontSize = (20 + Math.random()*20) + "px";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 7000);
+    }, 220);
+
+    setTimeout(() => clearInterval(interval), 12000);
+  }
 </script>
 
 </body>
