@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Be My Valentine?</title>
+
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffe6f0, #fff, #e6f2ff);
+  min-height: 100vh;
+}
+
+/* Floating Photos */
+.float-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.float-photo {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,.2);
+  animation: float linear infinite;
+}
+
+@keyframes float {
+  0%   { transform: translateY(110vh) rotate(0deg); }
+  100% { transform: translateY(-120vh) rotate(360deg); }
+}
+
+/* Card */
+.container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  padding: 30px;
+  text-align: center;
+  width: min(480px, 95%);
+  box-shadow: 0 25px 60px rgba(0,0,0,.2);
+}
+
+h1 {
+  margin: 0 0 10px;
+  font-size: 34px;
+}
+
+p {
+  margin: 0 0 20px;
+  opacity: .85;
+}
+
+/* Buttons */
+.button-area {
+  position: relative;
+  height: 140px;
+}
+
+button {
+  border: none;
+  padding: 12px 22px;
+  font-size: 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#yesBtn {
+  background: #ff2e72;
+  color: white;
+}
+
+#yesBtn:hover {
+  transform: scale(1.05);
+}
+
+#noBtn {
+  background: white;
+  position: absolute;
+}
+
+#noBtn:hover {
+  background: #eee;
+}
+
+/* YES Screen */
+#yesScreen {
+  display: none;
+  animation: fadeIn .4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.gift-box {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.9);
+}
+
+.gift-box img {
+  width: 100%;
+  border-radius: 15px;
+  margin-top: 10px;
+}
+
+#emailBtn {
+  margin-top: 15px;
+  width: 100%;
+  background: #111;
+  color: white;
+}
+
+/* Confetti */
+canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+</style>
+</head>
+
+<body>
+
+<div class="float-layer" id="floatLayer"></div>
+<canvas id="confetti"></canvas>
+
+<div class="container">
+  <div class="card" id="mainCard">
+    <h1>Will you be my Valentine? 💌</h1>
+    <p>One date. Your favorite vibe. I handle everything.</p>
+
+    <div class="button-area" id="buttonArea">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No</button>
+    </div>
+  </div>
+
+  <div class="card" id="yesScreen">
+    <h1>You said YES 😭💖</h1>
+    <p>Okay good. Because I already planned this.</p>
+
+    <div class="gift-box">
+      <h3>I got you something… 🎁</h3>
+      <p>Open this and then check your email 💌</p>
+
+      <img src="gift.jpg" alt="Gift Screenshot">
+
+      <button id="emailBtn">Check your email 💌</button>
+    </div>
+
+    <p style="margin-top:15px;">Text me “YES 💖” right now.</p>
+  </div>
+</div>
+
+<script>
+/* CONFIG */
+const PHOTO_COUNT = 18; // Change to number of photos you add
+const floatLayer = document.getElementById("floatLayer");
+
+/* Floating Photos */
+for (let i = 1; i <= PHOTO_COUNT; i++) {
+  const photo = document.createElement("div");
+  photo.className = "float-photo";
+  photo.style.backgroundImage = `url('photos/${i}.jpg')`;
+  photo.style.left = Math.random() * 100 + "vw";
+  photo.style.animationDuration = (15 + Math.random() * 10) + "s";
+  photo.style.animationDelay = Math.random() * 5 + "s";
+  floatLayer.appendChild(photo);
+}
+
+/* Moving No Button */
+const noBtn = document.getElementById("noBtn");
+const area = document.getElementById("buttonArea");
+
+function moveButton() {
+  const maxX = area.clientWidth - noBtn.offsetWidth;
+  const maxY = area.clientHeight - noBtn.offsetHeight;
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
+}
+
+noBtn.addEventListener("mouseenter", moveButton);
+noBtn.addEventListener("click", moveButton);
+
+/* YES Click */
+const yesBtn = document.getElementById("yesBtn");
+const mainCard = document.getElementById("mainCard");
+const yesScreen = document.getElementById("yesScreen");
+
+yesBtn.addEventListener("click", () => {
+  mainCard.style.display = "none";
+  yesScreen.style.display = "block";
+  startConfetti();
+});
+
+/* Email Button */
+document.getElementById("emailBtn").addEventListener("click", () => {
+  window.open("https://mail.google.com/mail/u/0/#inbox", "_blank");
+});
+
+/* Simple Confetti */
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+function startConfetti() {
+  const pieces = [];
+  for (let i = 0; i < 200; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      size: 6 + Math.random() * 8,
+      speed: 2 + Math.random() * 4,
+      color: `hsl(${Math.random()*360}, 80%, 60%)`
+    });
+  }
+
+  function update() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      p.y += p.speed;
+      if (p.y > canvas.height) p.y = -10;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    });
+    requestAnimationFrame(update);
+  }
+
+  update();
+}
+</script>
+
+</body>
+</html>
