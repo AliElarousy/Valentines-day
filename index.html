@@ -184,6 +184,27 @@
     100%{ transform: translateY(0); }
   }
 
+  .kiss-pop{
+  position: fixed;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%) scale(.6);
+  z-index: 9999;
+  font-size: clamp(60px, 10vw, 120px);
+  opacity: 0;
+  animation: kissPop .9s ease forwards;
+  pointer-events: none;
+  filter: drop-shadow(0 20px 35px rgba(0,0,0,.22));
+}
+
+@keyframes kissPop{
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.5); }
+  35%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  70%  { opacity: 1; transform: translate(-50%, -60%) scale(1.05); }
+  100% { opacity: 0; transform: translate(-50%, -75%) scale(.9); }
+}
+
+
   /* end screen */
   .end-wrap{
     display:flex;
@@ -262,14 +283,20 @@ I love you so much baby you're the cutest, hottest, smartest, funniest, most gor
 
   <!-- END -->
   <div class="card" id="endScreen" style="display:none;">
-    <div class="end-wrap">
-      <div class="end-kiss grad">haty bosa baa 😌💋</div>
-      <p style="margin:0; opacity:.9;">ta3aly hena ya rohi 💗</p>
-      <button class="dark" id="backToStartBtn" style="margin-top:6px;">Again 🔁</button>
-    </div>
-  </div>
+  <div class="end-wrap">
+    <div class="end-kiss grad">haty bosa baa 😌💋</div>
+    <p style="margin:0; opacity:.9;">ta3aly hena ya rohi 💗</p>
 
+    <button class="primary" id="kissBtn" style="margin-top:6px; width:100%;">
+      Give me a kiss 😘
+    </button>
+
+    <button class="dark" id="backToStartBtn" style="margin-top:8px; width:100%;">
+      Again 🔁
+    </button>
+  </div>
 </div>
+
 
 <script>
   /* ========= CONFIG ========= */
@@ -302,6 +329,31 @@ I love you so much baby you're the cutest, hottest, smartest, funniest, most gor
     el.style.opacity = rand(0.65, 0.95);
 
     floatLayer.appendChild(el);
+
+    const kissBtn = document.getElementById("kissBtn");
+
+kissBtn.addEventListener("click", () => {
+  // pop 💋 in the middle
+  const k = document.createElement("div");
+  k.className = "kiss-pop";
+  k.textContent = "💋";
+  document.body.appendChild(k);
+
+  // effects
+  startConfetti(1600);
+  heartBurst(40);
+
+  // make it feel final
+  kissBtn.disabled = true;
+  kissBtn.textContent = "Mwaaaah 😌💗";
+  kissBtn.style.opacity = "0.9";
+  kissBtn.style.cursor = "default";
+
+  setTimeout(() => k.remove(), 1000);
+});
+
+
+    
   }
 
   /* ========= NO BUTTON (playful) ========= */
@@ -470,6 +522,7 @@ I love you so much baby you're the cutest, hottest, smartest, funniest, most gor
 </script>
 </body>
 </html>
+
 
 
 
