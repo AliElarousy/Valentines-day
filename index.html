@@ -285,7 +285,7 @@ I love you so much baby you're the cutest, hottest, smartest, funniest, most gor
   <div class="card" id="endScreen" style="display:none;">
   <div class="end-wrap">
     <div class="end-kiss grad">haty bosa baa 😌💋</div>
-    <p style="margin:0; opacity:.9;">ta3aly hena ya rohi 💗</p>
+    <p id="afterKissText" style="margin:0; opacity:0; transition:.4s ease;">   ta3aly hena ya rohi 💗 </p>
 
     <button class="primary" id="kissBtn" style="margin-top:6px; width:100%;">
       Give me a kiss 😘
@@ -333,24 +333,29 @@ I love you so much baby you're the cutest, hottest, smartest, funniest, most gor
     const kissBtn = document.getElementById("kissBtn");
 
 kissBtn.addEventListener("click", () => {
-  // pop 💋 in the middle
+
+  // 💋 pop animation
   const k = document.createElement("div");
   k.className = "kiss-pop";
   k.textContent = "💋";
   document.body.appendChild(k);
 
-  // effects
   startConfetti(1600);
   heartBurst(40);
 
-  // make it feel final
+  // Lock button
   kissBtn.disabled = true;
   kissBtn.textContent = "Mwaaaah 😌💗";
   kissBtn.style.opacity = "0.9";
   kissBtn.style.cursor = "default";
 
+  // Reveal hidden text
+  const afterText = document.getElementById("afterKissText");
+  afterText.style.opacity = "1";
+
   setTimeout(() => k.remove(), 1000);
 });
+
 
 
     
@@ -522,6 +527,7 @@ kissBtn.addEventListener("click", () => {
 </script>
 </body>
 </html>
+
 
 
 
